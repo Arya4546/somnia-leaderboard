@@ -150,41 +150,31 @@ router.post("/publish", async (req, res) => {
       { id: toHex(`player-${Date.now()}`, { size: 32 }), schemaId: currentSchemaId, data },
     ];
 
-   // ❌ Upload disabled
-// const tx = await sdk.streams.set(dataStreams);
+    const tx = await sdk.streams.set(dataStreams);
 
-console.log(
-  `Mock Published: ${player} | Score ${score} | PlayTime ${playTime}s`
-);
+    console.log(
+      `Published: ${player} | Score ${score} | PlayTime ${playTime}s | Tx ${tx}`
+    );
 
-return res.json({
-  success: true,
-  txHash: null,
-  mode: "mock"
-});
-
-
-//    res.json({ success: true, txHash: tx });
- // } catch (err) {
- //   console.error("Publish error:", err);
+    res.json({ success: true, txHash: tx });
+  } catch (err) {
+    console.error("Publish error:", err);
     
-   // if (err.message?.includes("account does not exist") || err.details?.includes("account does not exist")) {
-   //   return res.status(500).json({ 
-   //     error: "Publisher wallet account does not exist or has zero balance",
-   //     wallet: walletClient.account.address,
-   //     message: "Please fund this wallet with STT tokens on Somnia Dream network",
-   //     details: err.shortMessage || err.message
-   //   });
-   // }
+    if (err.message?.includes("account does not exist") || err.details?.includes("account does not exist")) {
+      return res.status(500).json({ 
+        error: "Publisher wallet account does not exist or has zero balance",
+        wallet: walletClient.account.address,
+        message: "Please fund this wallet with STT tokens on Somnia Dream network",
+        details: err.shortMessage || err.message
+      });
+    }
     
-   // res.status(500).json({ 
-   //   error: err.shortMessage || err.message,
-   //   details: err.details
-  //  });
-//  }
+    res.status(500).json({ 
+      error: err.shortMessage || err.message,
+      details: err.details
+    });
   }
 });
-
 
 router.get("/data", async (req, res) => {
   try {
