@@ -113,11 +113,16 @@ router.get("/schema", async (req, res) => {
 });
 
 router.post("/publish", async (req, res) => {
-  return res.status(403).json({
-    error: "Publishing disabled",
-    message: "Score submission is currently disabled. Read-only mode enabled."
+  console.log("🚫 Publish blocked (read-only mode)", req.body);
+
+  return res.status(200).json({
+    success: true,
+    published: false,
+    readOnly: true,
+    message: "Read-only mode enabled. Score not uploaded."
   });
 });
+
 
 
 router.get("/data", async (req, res) => {
